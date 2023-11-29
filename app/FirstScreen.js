@@ -51,11 +51,11 @@ const FirstScreen = () => {
         if (gestureState.dx < -100) {
           // If the user swipes left by at least 50 units, animate the transition
           Animated.timing(translateX, {
-            toValue: -400, // Adjust this value based on your requirement
+            toValue: -400,
             duration: 300,
             useNativeDriver: false,
           }).start(() => {
-            navigation.navigate('SecondScreen');
+            navigation.navigate('SecondScreen', { preload: true }); 
           });
         } else {
           // If the swipe is not sufficient, reset the translation value

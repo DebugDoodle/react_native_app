@@ -1,51 +1,35 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, BackHandler, Animated, Easing } from 'react-native';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
+import { View, StyleSheet, Animated, Easing } from 'react-native';
+import { Circle, G, Svg } from 'react-native-svg';
 
 const SecondScreen = () => {
-  const navigation = useNavigation();
-  const isFocused = useIsFocused();
-  const opacity = useRef(new Animated.Value(0)).current;
+  const percentage = 75;
+  const progress = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    const backHandler = () => {
-      // Disable the back button if this screen is focused
-      if (isFocused) {
-        return true; // Returning true prevents the default back action
-      }
-      return false; // Returning false allows the default back action
-    };
-
-    // Add the event listener for the hardware back button
-    const backHandlerListener = navigation.addListener('beforeRemove', (e) => {
-      e.preventDefault();
-    });
-
-    // Add the event listener for the software back button (Android)
-    const hardwareBackListener = BackHandler.addEventListener('hardwareBackPress', backHandler);
-
-    // Start the fade-in animation when the screen is focused
-    if (isFocused) {
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: 500,
-        easing: Easing.ease,
-        useNativeDriver: true,
-      }).start();
-    }
-
-    // Clean up the listeners when the component unmounts or loses focus
-    return () => {
-      backHandlerListener();
-      hardwareBackListener.remove();
-    };
-  }, [isFocused, navigation, opacity]);
+    Animated.timing(progress, {
+      toValue: percentage / 100,
+      duration: 1500,
+      easing: Easing.ease,
+      useNativeDriver: true,     
+    }).start();
+  }, [percentage, progress]);
 
   return (
     <View style={styles.container}>
-      <Animated.Text style={[styles.text, { opacity: opacity }]}>
-        This is the Second Screen
-      </Animated.Text>
+      <Svg width={150} height={150}>
+        <G rotation="-90" origin="75,75">
+          <Circle
+            cx="75"
+            cy="75"
+            r="70"
+            fill="transparent"
+            stroke="white"
+            strokeWidth="10"
+          />
+          
+        </G>
+      </Svg>
     </View>
   );
 };
@@ -56,10 +40,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  text: {
-    color: 'white',
-    fontSize: 24,
   },
 });
 

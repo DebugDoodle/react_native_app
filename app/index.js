@@ -17,10 +17,13 @@ const App = () => {
             headerShown: false, // Hide the header for this screen
           }}
         />
-        <Stack.Screen name="SecondScreen" component={SecondScreen}
-        options={{
-          headerShown: false, // Hide the header for this screen
-        }}
+        <Stack.Screen
+          name="SecondScreen"
+          component={SecondScreen}
+          options={({ route }) => ({
+            headerShown: false,
+            preload: route.params?.preload, 
+          })}
         />
       </Stack.Navigator>
   );
