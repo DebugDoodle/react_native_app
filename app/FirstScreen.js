@@ -47,6 +47,7 @@ const FirstScreen = () => {
           translateX.setValue(gestureState.dx);
         }
       },
+      
       onPanResponderRelease: (_, gestureState) => {
         if (gestureState.dx < -100) {
           // If the user swipes left by at least 50 units, animate the transition
@@ -55,7 +56,15 @@ const FirstScreen = () => {
             duration: 300,
             useNativeDriver: false,
           }).start(() => {
-            navigation.navigate('SecondScreen', { preload: true }); 
+            setFirstName((prevFirstName) => {
+              setLastName((prevLastName) => {
+                navigation.navigate('SecondScreen', {
+                  preload: true,
+                  firstName: prevFirstName, // Use the previous values
+                  lastName: prevLastName,
+                });
+              });
+            });
           });
         } else {
           // If the swipe is not sufficient, reset the translation value
