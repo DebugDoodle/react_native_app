@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, FlatList, Dimensions, StyleSheet } from 'react-native';
 import { Circle, G, Svg } from 'react-native-svg';
 
 const SecondScreen = ({ route }) => {
   const { firstName, lastName } = route.params;
-  const radius = 17;
-  const strokeWidth = 4;
+  const radius = 80;
+  const strokeWidth = 15;
   const circumference = 2 * Math.PI * radius;
   const percentage = 20;
   const progress = circumference - (percentage / 100) * circumference;
@@ -21,70 +21,63 @@ const SecondScreen = ({ route }) => {
     greetingMessage = 'Good evening';
   }
 
-  const renderCircles = () => {
-    const numberOfCircles = 5;
-    const circles = [];
+  const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
-    for (let i = 0; i < numberOfCircles; i++) {
-      circles.push(
-        <Svg key={i} height="100%" width="100%" viewBox="0 0 120 120">
-          <G rotation={"270"}>
-            <Circle
-              cx="-54"
-              cy="36"
-              r="17"
-              stroke="white"
-              strokeWidth={strokeWidth}
-              fill="transparent"
-            />
-            <Text style={styles.percentageText}>{percentage}%</Text>
-            <Circle
-              cx="-54"
-              cy="36"
-              r="18"
-              stroke="black"
-              strokeWidth="8"
-              fill="transparent"
-              strokeDasharray={circumference}
-              strokeDashoffset={progress}
-            />
-          </G>
-        </Svg>
-      );
-    }
-    return circles;
+  const data = Array.from({ length: 5 }, (_, index) => index);
+
+  const renderCircle = ({ index }) => {
+    const circleOffset = screenWidth * index; // Adjust the spacing as needed
+
+    return (
+      <Svg height="100%" width={screenWidth} key={index}>
+        <G>
+          <Circle
+            cx={screenWidth / 2}
+            cy="200"
+            r={radius}
+            stroke="white"
+            strokeWidth={strokeWidth}
+            fill="transparent"
+          />
+          <Circle
+            cx={screenWidth / 2}
+            cy="200"
+            r={radius+0.1}
+            stroke="black"
+            strokeWidth="15.4"
+            fill="transparent"
+            strokeDasharray={circumference}
+            strokeDashoffset={progress}
+          />
+        </G>
+      </Svg>
+    );
   };
 
-  
   return (
     <View style={styles.container}>
       <Text style={styles.greetingText}>{greetingMessage}</Text>
       <Text style={styles.name}>
         {firstName} {lastName}
       </Text>
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
+      <FlatList
+        data={data}
+        renderItem={renderCircle}
+        keyExtractor={(item) => item.toString()}
         horizontal
+        pagingEnabled
+        inverted
         showsHorizontalScrollIndicator={false}
-      >
-        <View style={styles.horizontalContainer}>{renderCircles()}</View>
-      </ScrollView>
+      />
     </View>
   );
 };
+
 const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
   container: {
     flex: 1,
     alignItems: 'center',
     backgroundColor: 'black',
-  },
-  horizontalContainer: {
-    flexDirection: 'row',
   },
   greetingText: {
     fontSize: 24,
@@ -95,9 +88,6 @@ const styles = StyleSheet.create({
     opacity: 0.65,
   },
   percentageText: {
-    marginTop: 250,
-    marginLeft: 140,
-    position: 'absolute',
     fontSize: 50,
     color: 'white',
   },
@@ -107,9 +97,6 @@ const styles = StyleSheet.create({
     marginTop: 0,
     marginRight: 'auto',
     marginLeft: 20,
-  },
-  horizontalContainer: {
-    flexDirection: 'row',
   },
 });
 

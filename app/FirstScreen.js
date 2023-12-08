@@ -67,7 +67,6 @@ const FirstScreen = () => {
             });
           });
         } else {
-          // If the swipe is not sufficient, reset the translation value
           Animated.spring(translateX, {
             toValue: 0,
             useNativeDriver: false,

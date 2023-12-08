@@ -14,19 +14,23 @@ const App = () => {
           name="FirstScreen"
           component={FirstScreen}
           options={{
-            headerShown: false, // Hide the header for this screen
+            headerShown: false,
           }}
         />
         <Stack.Screen
           name="SecondScreen"
           component={SecondScreen}
-          options={({ route }) => ({
+          options={{
             headerShown: false,
-            preload: route.params?.preload, 
-          })}
+            transitionSpec: {
+              open: { animation: 'timing', config: { duration: 0 } }, // No animation on open
+              close: { animation: 'timing', config: { duration: 0 } }, // No animation on close
+            },
+          }}
         />
       </Stack.Navigator>
   );
 };
 
 export default App;
+
